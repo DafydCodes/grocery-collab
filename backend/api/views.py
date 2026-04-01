@@ -124,3 +124,16 @@ def add_member(request, list_id):
         return Response({'message': 'Member added'})
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=404)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_item(request, item_id):
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        return Response({'error': 'Item not found'}, status=404)
+
+    list_id = item.list_id
+    item.delete()
+
+    return Response({'message': 'Item deleted'})
